@@ -23,10 +23,10 @@ __all__ = [
 
 def create_block_resources(resources_to_block: list):
     """Create a function that blocks specified resources.
-    
+
     Args:
         resources_to_block (List[str]): List of the resources to block.
-    
+
     Returns:
         callable: A function that can be used as a route handler to block resources.
     """
@@ -35,7 +35,7 @@ def create_block_resources(resources_to_block: list):
         See
         - https://playwright.dev/python/docs/api/class-request#request-resource-type
         - https://www.zenrows.com/blog/blocking-resources-in-playwright#blocking-resources
-        
+
         Block specified resources
 
         Args:
@@ -59,7 +59,7 @@ def create_block_resources(resources_to_block: list):
     return _block_resources
 
 
-### WEB BROWSER AND PAGE OPENING
+# WEB BROWSER AND PAGE OPENING
 
 
 def _instantiate_browser_context_page(
@@ -179,6 +179,14 @@ def open_new_page(
 
 
 def with_page(**kwargs):
+    """Decorator to open a new page and it is the decorated function.
+
+    Args:
+        **kwargs: Keyword arguments to configure the browser, browser context, and page.
+
+    Returns:
+        callable: Decorator function.
+    """
     def decorator(func):
         def func_wrapper(*func_args, **func_kwargs):
             # by default, accept_downloads=True, headless=True, block_resources=True, no proxy, no cookies
@@ -197,7 +205,8 @@ def with_page(**kwargs):
 
             # open browser, context and page with the conditions specified in the kwargs dictionary
             with sync_playwright() as p:
-                browser, context, page = _instantiate_browser_context_page(p, **kwargs)
+                browser, context, page = _instantiate_browser_context_page(
+                    p, **kwargs)
 
                 # add the new page to the wrapped function kwargs
                 func_kwargs["page"] = page
@@ -216,8 +225,21 @@ def with_page(**kwargs):
     return decorator
 
 
-### WEB SURFING
+# WEB SURFING
 def _get_page_arg(func_args: list, func_kwargs: dict, func_name: str) -> Page:
+    """Get the `Page` argument from the function's arguments or keyword arguments.
+
+    Args:
+        func_args (list): List of arguments of the function.
+        func_kwargs (dict): The function's keyword arguments.
+        func_name (str): The name of the function.
+
+    Returns:
+        Page: The `Page` object.
+
+    Raises:
+        Exception: If the `Page` object is not found in the function's arguments or keyword arguments.
+    """
     page = None
     if func_kwargs:
         page = func_kwargs.get("page")
@@ -231,6 +253,15 @@ def _get_page_arg(func_args: list, func_kwargs: dict, func_name: str) -> Page:
 
 
 def wait_after_execution(wait_ms: int = 2000, randomized: bool = True):
+    """Decorator to add a delay after executing a function.
+
+    Args:
+        wait_ms (int, optional): The duration of the delay. Defaults to 2000.
+        randomized (bool, optional): Whether to randomize the delay. Defaults to True.
+
+    Returns:
+        callable: Decorator function.
+    """
     def decorator(func):
         def func_wrapper(*func_args, **func_kwargs):
             # get the page object. Check the kwargs first, then the first args
@@ -266,6 +297,17 @@ def check_for_loaded_marker(
     load_message: str = None,
     timeout: int = 10000,
 ):
+    """Decorator to check for the marker loaded or not loaded.
+
+    Args:
+        marker (Union[str, Locator], optional): The marker to check for. Defaults to None.
+        marker_strict (bool, optional): Whether the marker should match strictly. Defaults to False.
+        load_message (str, optional): The message to log when the marker is visible. Defaults to None.
+        timeout (int, optional): The timeout to wait for the marker to become visible. Defaults to 10000.
+
+    Returns:
+        callable: Decorator function.
+    """
     def decorator(func):
         def func_wrapper(*func_args, **func_kwargs):
             # get the page object. Check the kwargs first, then the first args
