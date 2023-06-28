@@ -19,6 +19,12 @@ from asyncio.exceptions import CancelledError
 
 
 def set_json_to_page(page, buffer):
+    """Set a JSON object to the given page.
+
+    Args:
+        page (Page): The Playwright page object to set the JSON to.
+        buffer (dict): The JSON object to set.
+    """
     if not buffer.get("error"):
         page.target_json = buffer
     else:
@@ -30,6 +36,15 @@ def set_json_to_page(page, buffer):
 
 
 def construct_handle_response(page: Page, json_url_subpart: str):
+    """Construct a response handler function to intercept and handle responses.
+
+    Args:
+        page (Page): The Playwright page object to set the JSON to.
+        json_url_subpart (str): The subpart of the URL to match for intercepting responses.
+
+    Returns:
+        callable: The response handler function.
+    """
     def handle_response(response):
         try:
             if json_url_subpart in response.url:
@@ -59,6 +74,23 @@ def intercept_json_playwright(
     goto_timeout=30000,
     **kwargs,
 ) -> dict:
+    """Intercepts JSON data from a specified URL using Playwright.
+
+    Args:
+        page_url (str): The URL of page to navigate.
+        json_url_subpart (str): Substring to match in the intercepted JSON URL.
+        page (Page, optional): Playwright page object. Defaults to None.
+        json_detect_error (callable, optional): Error detection function. Defaults to None.
+        json_parse_result (callable, optional): Json parsing function. Defaults to None.
+        captcha_solver_function (callable, optional): Captcha solver function. Defaults to None.
+        max_refresh (int, optional): Maximum number of page refreshes. Defaults to 1.
+        timeout (int, optional): Timeout duration. Defaults to 4000.
+        goto_timeout (int, optional): Timeout for page navigation. Defaults to 30000.
+        **kwargs: Additional keyword arguments for the `with_page` decorator.
+
+    Returns:
+        dict: The intercepted and parsed JSON data.
+    """
     logging.debug("This version of playwright_intercept is deprecated")
     time_spent = 0
     nb_refresh = 0
@@ -321,6 +353,17 @@ def request_json_playwright(
     json_parse_result: callable = None,
     **kwargs,
 ) -> dict:
+    """Requests and intercepts JSON data from a specified URL using Playwright.
+
+    Args:
+        json_url (str): The URL to request the JSON data.
+        json_detect_error (callable, optional): Error detection function. Defaults to None.
+        json_parse_result (callable, optional): Result parsing function. Defaults to None.
+        **kwargs: Additional keyword arguments to be passed to the underlying `intercept_json_playwright` function.
+
+    Returns:
+        dict: The intercepted and parsed JSON data.
+    """
     result = intercept_json_playwright(
         page_url=json_url,
         json_url_subpart=json_url,
