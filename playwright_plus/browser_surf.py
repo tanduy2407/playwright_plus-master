@@ -179,7 +179,7 @@ def open_new_page(
 
 
 def with_page(**kwargs):
-    """Decorator to open a new page and it is the decorated function.
+    """Decorator to open a new page.
 
     Args:
         **kwargs: Keyword arguments to configure the browser, browser context, and page.
