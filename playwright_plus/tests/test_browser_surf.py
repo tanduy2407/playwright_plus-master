@@ -12,20 +12,17 @@ from browser_surf import (
 
 class TestCodeModule(unittest.TestCase):
 	def test_create_block_resources(self):
-
-		mock_page = MagicMock()
-		
-		mock_page = MagicMock()
 		resources_to_block = ['image', 'font']
-		
 		block_resources = create_block_resources(resources_to_block)
 
+		# test with positive case
 		mock_route = MagicMock()
 		mock_route.continue_ = MagicMock()
 		mock_route.request.resource_type = 'video'
 		block_resources(mock_route)
 		mock_route.continue_.assert_called_with()
 
+		# test with negative case
 		mock_route = MagicMock()
 		mock_route.abort = MagicMock()
 		mock_route.request.resource_type = 'image'		

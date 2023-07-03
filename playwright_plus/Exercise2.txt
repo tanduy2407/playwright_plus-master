@@ -1,0 +1,3 @@
+- Use Auto-waiting to auto-wait and check on the elements before making actions to ensure these actions behave as expected. It helps us to handle in the case the website has slow page loading speed or when the internet connection is not good.
+- Not easy for beginner, need more beginner-friendly documentations with tutorials, exmaples and guides. Nedd to provide more use cases with clearer explainations.
+- Playwright need to open a brower to implement the crawler, that will cost hardware resources and cost to maintain. We can ue an alternative way like 'colly' written in Golang (provides a clean interface to write any kind of crawler/scraper/spider.).
