@@ -14,20 +14,22 @@ class TestYourModule(unittest.TestCase):
 
     def test_set_json_to_page(self):
         page = Page()
+        # create a sample buffer json data
         buffer = {"data": {"name": "Duy", "age": 26}}
         set_json_to_page(page, buffer)
         self.assertEqual(page.target_json, buffer)
 
     def test_construct_handle_response(self):
         page = Page()
-        json_url_subpart = "/api/data"
+        json_url_subpart = self.page_url
         handle_response = construct_handle_response(page, json_url_subpart)
-        response = type("MockResponse", (), {"url": "https://example.com/api/data"})
+        response = type("MockResponse", (), {"url": self.page_url + self.json_url_subpart})
         with patch("web_intercept.set_json_to_page") as mock_set_json_to_page:
             handle_response(response)
             mock_set_json_to_page.assert_called_with(page, response.json())
 
     def test_intercept_json_playwright(self):
+        # create a test result
         result = intercept_json_playwright(
             self.page_url,
             self.json_url_subpart,

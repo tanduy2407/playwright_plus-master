@@ -13,6 +13,7 @@ from browser_surf import (
 class TestCodeModule(unittest.TestCase):
 	def test_create_block_resources(self):
 		resources_to_block = ['image', 'font']
+		# create a list of block resources for test
 		block_resources = create_block_resources(resources_to_block)
 
 		# test with positive case
